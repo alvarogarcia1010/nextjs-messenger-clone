@@ -1,6 +1,8 @@
 import Head from 'next/head'
 import type { NextPage } from 'next'
 import styles from 'styles/Messenger.module.css'
+import Message from 'components/Message/Message'
+import ChatOnline from 'components/ChatOnline/ChatOnline'
 import Conversation from 'components/Conversations/Conversation'
 
 const Messenger : NextPage = () => (
@@ -22,10 +24,49 @@ const Messenger : NextPage = () => (
         </div>
       </div>
       <div className={styles.chatBox}>
-        <div className={styles.chatBoxWrapper}>box</div>
+        <div className={styles.chatBoxWrapper}>
+          <div className={styles.chatBoxTop}>
+            <Message />
+            <Message own />
+            <Message />
+            <Message />
+            <Message own />
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+            <Message own />
+            <Message />
+            <Message />
+            <Message />
+            <Message />
+            <Message own />
+          </div>
+          <div className={styles.chatBoxBottom}>
+            <textarea
+              className={styles.chatMessageInput}
+              placeholder="write something"
+            />
+            <button
+              type="button"
+              className={styles.chatSubmitButton}
+            >
+              Send
+            </button>
+          </div>
+        </div>
       </div>
       <div className={styles.chatOnline}>
-        <div className={styles.chatOnlineWrapper}>online</div>
+        <div className={styles.chatOnlineWrapper}>
+          <ChatOnline />
+          <ChatOnline />
+          <ChatOnline />
+          <ChatOnline />
+          <ChatOnline />
+          <ChatOnline />
+          <ChatOnline />
+          <ChatOnline />
+        </div>
       </div>
     </div>
   </div>
