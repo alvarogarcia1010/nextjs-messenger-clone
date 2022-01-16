@@ -1,4 +1,10 @@
-import { saveConversation } from 'server/Firebase/Conversation/conversationService'
+import { saveConversation, findConversation } from 'server/Firebase/Conversation/conversationService'
+
+interface Filter {
+  field: string,
+  operator: string,
+  value: any,
+}
 
 class Conversation {
   members: Array<any>
@@ -22,6 +28,19 @@ class Conversation {
       }
     } catch (error) {
       return { success: false }
+    }
+  }
+
+  static async find(filter:Filter) {
+    try {
+      const conversations = await findConversation(filter)
+
+      return {
+        success: true,
+        conversations,
+      }
+    } catch (error) {
+      return { success: true, conversations: [] }
     }
   }
 }

@@ -2,15 +2,18 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import Conversation from 'server/Models/Conversation'
 
 const getConversationByUserId = async (req: NextApiRequest, res: NextApiResponse<any>) => {
-  const senderId = req.body.senderId ?? null
-  const receiverId = req.body.receiverId ?? null
+  const userId = req.query.userId ?? null
 
-  if (!senderId || !receiverId) {
-    return res.status(400).end('SenderId or receiverId not found')
+  if (!userId) {
+    return res.status(400).end('UserId not found')
   }
 
-  const conversation = new Conversation([senderId, receiverId])
-  const response = await conversation.save()
+  const response = await Conversation.find({
+    field: 'members',
+    operator: 'array-contains',
+    value: userId,
+  })
+
   return res.status(201).json(response)
 }
 
