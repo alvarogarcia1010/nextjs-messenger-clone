@@ -1,4 +1,4 @@
-import { firestore } from '../admin'
+import { firestore } from './admin'
 
 interface Filter {
   field: string,

@@ -1,4 +1,4 @@
-import { saveConversation, findConversation } from 'server/Firebase/Conversation/conversationService'
+import { saveConversation, findConversation } from 'server/Firebase/conversationService'
 
 interface Filter {
   field: string,
