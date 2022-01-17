@@ -35,12 +35,9 @@ class Conversation {
     try {
       const conversations = await findConversation(filter)
 
-      return {
-        success: true,
-        conversations,
-      }
+      return conversations
     } catch (error) {
-      return { success: true, conversations: [] }
+      return []
     }
   }
 }

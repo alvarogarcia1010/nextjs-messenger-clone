@@ -8,13 +8,16 @@ const getConversationByUserId = async (req: NextApiRequest, res: NextApiResponse
     return res.status(400).end('UserId not found')
   }
 
-  const response = await Conversation.find({
+  const conversations = await Conversation.find({
     field: 'members',
     operator: 'array-contains',
     value: userId,
   })
 
-  return res.status(201).json(response)
+  return res.status(201).json({
+    success: true,
+    conversations,
+  })
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<any>) {
