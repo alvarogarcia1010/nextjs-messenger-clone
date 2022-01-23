@@ -13,10 +13,13 @@ class Conversation {
 
   text: string
 
+  createdAt: string
+
   constructor(conversationId:string, sender:string, text:string) {
     this.conversationId = conversationId
     this.sender = sender
     this.text = text
+    this.createdAt = new Date().toISOString()
   }
 
   async save() {
@@ -25,6 +28,7 @@ class Conversation {
         conversationId: this.conversationId,
         sender: this.sender,
         text: this.text,
+        createdAt: this.createdAt,
       })
 
       return {

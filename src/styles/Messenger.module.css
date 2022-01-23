@@ -61,3 +61,16 @@
   height: 100%;
   padding: 10px;
 }
+
+.emptyContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.emptyText {
+  font-size: 24px;
+  font-weight: bold;
+  color: gray;
+}

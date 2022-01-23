@@ -1,3 +1,4 @@
+import { USERS } from 'data/dummy-data'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import Conversation from 'server/Models/Conversation'
 
@@ -14,9 +15,20 @@ const getConversationByUserId = async (req: NextApiRequest, res: NextApiResponse
     value: userId,
   })
 
+  const conversationsWithUser = conversations.map((conversation:any) => {
+    const friendId = conversation.members.find((m:any) => m !== userId)
+    const friendData = USERS.find((u:any) => u.id === parseInt(friendId, 10))
+
+    return {
+      ...friendData,
+      ...conversation,
+      friendId,
+    }
+  })
+
   return res.status(201).json({
     success: true,
-    conversations,
+    conversations: conversationsWithUser,
   })
 }
 
