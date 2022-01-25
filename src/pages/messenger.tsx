@@ -1,17 +1,22 @@
 import Head from 'next/head'
 import type { NextPage } from 'next'
-import useUser from 'hooks/useUser'
 import styles from 'styles/Messenger.module.css'
 import Message from 'components/Message/Message'
 import useConversations from 'hooks/useConversations'
 import ChatOnline from 'components/ChatOnline/ChatOnline'
 import Conversation from 'components/Conversations/Conversation'
 import useCurrentConversation from 'hooks/useCurrentConversation'
+import MessageInput from 'components/MessageInput/MessageInput'
 
 const Messenger : NextPage = () => {
-  const { userId } = useUser()
   const conversations = useConversations()
-  const { currentConversation, messages, onChangeConversation } = useCurrentConversation()
+  const {
+    userId,
+    currentConversation,
+    messages,
+    sendMessage,
+    onChangeConversation,
+  } = useCurrentConversation()
 
   let chatContainer:any = messages.map((m:any) => (
     <Message
@@ -65,16 +70,7 @@ const Messenger : NextPage = () => {
               {chatContainer}
             </div>
             <div className={styles.chatBoxBottom}>
-              <textarea
-                className={styles.chatMessageInput}
-                placeholder="write something"
-              />
-              <button
-                type="button"
-                className={styles.chatSubmitButton}
-              >
-                Send
-              </button>
+              <MessageInput handleSubmit={sendMessage} />
             </div>
           </div>
         </div>

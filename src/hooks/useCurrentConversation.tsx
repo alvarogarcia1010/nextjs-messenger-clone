@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import useUser from 'hooks/useUser'
 
 const useCurrentConversation = () => {
   const [currentConversation, setCurrentConversation] = useState<any>(null)
   const [messages, setMessages] = useState<any[]>([])
+  const { userId } = useUser()
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -22,9 +24,32 @@ const useCurrentConversation = () => {
     setCurrentConversation(conversation)
   }
 
+  const sendMessage = async (text:string) => {
+    const newMessage = {
+      text,
+      sender: userId,
+      conversationId: currentConversation.id,
+    }
+
+    const response = await fetch('/api/messages', {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json; charset=UTF-8' },
+      body: JSON.stringify(newMessage),
+    })
+
+    const data = await response.json()
+    if (!data.success) {
+      return
+    }
+
+    setMessages((currentMessage) => [...currentMessage, data.message])
+  }
+
   return {
+    userId,
     messages,
     currentConversation,
+    sendMessage,
     onChangeConversation,
   }
 }

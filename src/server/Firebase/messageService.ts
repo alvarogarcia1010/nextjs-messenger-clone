@@ -9,10 +9,12 @@ interface Filter {
 const mapFirebaseMessageToMessageObject = (doc:any) => {
   const data = doc.data()
   const { id } = doc
+  const { createdAt } = data;
 
   return {
     ...data,
     id,
+    createdAt: +createdAt.toDate(),
   }
 }
 

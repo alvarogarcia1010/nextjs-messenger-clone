@@ -13,13 +13,13 @@ class Conversation {
 
   text: string
 
-  createdAt: string
+  createdAt: number
 
   constructor(conversationId:string, sender:string, text:string) {
     this.conversationId = conversationId
     this.sender = sender
     this.text = text
-    this.createdAt = new Date().toISOString()
+    this.createdAt = Date.now()
   }
 
   async save() {
@@ -28,12 +28,12 @@ class Conversation {
         conversationId: this.conversationId,
         sender: this.sender,
         text: this.text,
-        createdAt: this.createdAt,
+        createdAt: new Date(),
       })
 
       return {
         success: true,
-        conversation: {
+        message: {
           ...this,
           id: response.id,
         },
