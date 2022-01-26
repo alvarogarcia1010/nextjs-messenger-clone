@@ -9,6 +9,13 @@ const MessageInput = ({ handleSubmit }:any) => {
     setNewMessage('')
   }
 
+  const handleKeyPress = (event:any) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      onSubmit()
+    }
+  }
+
   return (
     <>
       <textarea
@@ -16,6 +23,7 @@ const MessageInput = ({ handleSubmit }:any) => {
         placeholder="write something"
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
       <button
         type="button"

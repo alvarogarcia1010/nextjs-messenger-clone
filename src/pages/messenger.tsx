@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import type { NextPage } from 'next'
+import { useEffect, useRef } from 'react'
 import styles from 'styles/Messenger.module.css'
 import Message from 'components/Message/Message'
 import useConversations from 'hooks/useConversations'
@@ -9,6 +10,7 @@ import useCurrentConversation from 'hooks/useCurrentConversation'
 import MessageInput from 'components/MessageInput/MessageInput'
 
 const Messenger : NextPage = () => {
+  const scrollRef:any = useRef()
   const conversations = useConversations()
   const {
     userId,
@@ -18,20 +20,41 @@ const Messenger : NextPage = () => {
     onChangeConversation,
   } = useCurrentConversation()
 
-  let chatContainer:any = messages.map((m:any) => (
-    <Message
-      key={m.id}
-      own={parseInt(m.sender, 10) === userId}
-      text={m.text}
-      createdAt={m.createdAt}
-    />
-  ))
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
+  let chatContainer = (
+    <>
+      <div className={styles.chatBoxTop}>
+        {messages.map((m:any) => (
+          <div key={m.id} ref={scrollRef}>
+            <Message
+              own={parseInt(m.sender, 10) === userId}
+              text={m.text}
+              createdAt={m.createdAt}
+            />
+          </div>
+        ))}
+      </div>
+      <div className={styles.chatBoxBottom}>
+        <MessageInput handleSubmit={sendMessage} />
+      </div>
+    </>
+  )
 
   if (messages.length === 0) {
     chatContainer = (
-      <div className={styles.emptyContainer}>
-        <p className={styles.emptyText}>No hay mensajes</p>
-      </div>
+      <>
+        <div className={styles.chatBoxTop}>
+          <div className={styles.emptyContainer}>
+            <p className={styles.emptyText}>No hay mensajes.</p>
+          </div>
+        </div>
+        <div className={styles.chatBoxBottom}>
+          <MessageInput handleSubmit={sendMessage} />
+        </div>
+      </>
     )
   }
 
@@ -66,12 +89,7 @@ const Messenger : NextPage = () => {
         </div>
         <div className={styles.chatBox}>
           <div className={styles.chatBoxWrapper}>
-            <div className={styles.chatBoxTop}>
-              {chatContainer}
-            </div>
-            <div className={styles.chatBoxBottom}>
-              <MessageInput handleSubmit={sendMessage} />
-            </div>
+            {chatContainer}
           </div>
         </div>
         <div className={styles.chatOnline}>
