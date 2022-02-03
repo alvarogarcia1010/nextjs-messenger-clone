@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import type { NextPage } from 'next'
 import { io } from 'socket.io-client'
-import { useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import styles from 'styles/Messenger.module.css'
 import Message from 'components/Message/Message'
 import useConversations from 'hooks/useConversations'
@@ -14,13 +14,15 @@ const Messenger : NextPage = () => {
   const socket:any = useRef()
   const scrollRef:any = useRef()
   const conversations = useConversations()
+  const [arrivalMessage, setArrivalMessage] = useState<any>(null)
   const {
     userId,
     currentConversation,
     messages,
+    setMessages,
     sendMessage,
     onChangeConversation,
-  } = useCurrentConversation()
+  } = useCurrentConversation(socket)
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -28,7 +30,22 @@ const Messenger : NextPage = () => {
 
   useEffect(() => {
     socket.current = io('ws://localhost:8900')
+
+    socket.current.on('getMessage', (data:any) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        ...data.text,
+        createdAt: Date.now(),
+        id: (Math.random() + 1).toString(36).substring(7),
+      });
+    });
   }, [])
+
+  useEffect(() => {
+    if (arrivalMessage && currentConversation?.members.includes(`${arrivalMessage.sender}`)) {
+      setMessages((prev) => [...prev, arrivalMessage]);
+    }
+  }, [arrivalMessage, currentConversation]);
 
   useEffect(() => {
     socket.current.emit('addUser', userId)
@@ -102,7 +119,7 @@ const Messenger : NextPage = () => {
             {chatContainer}
           </div>
         </div>
-        <div className={styles.chatOnline}>
+        {/* <div className={styles.chatOnline}>
           <div className={styles.chatOnlineWrapper}>
             <ChatOnline />
             <ChatOnline />
@@ -113,7 +130,7 @@ const Messenger : NextPage = () => {
             <ChatOnline />
             <ChatOnline />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )

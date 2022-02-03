@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import useUser from 'hooks/useUser'
 
-const useCurrentConversation = () => {
+const useCurrentConversation = (socket:any) => {
   const [currentConversation, setCurrentConversation] = useState<any>(null)
   const [messages, setMessages] = useState<any[]>([])
   const { userId } = useUser()
@@ -31,6 +31,14 @@ const useCurrentConversation = () => {
       conversationId: currentConversation.id,
     }
 
+    const receiverId = currentConversation.members.find((member:any) => parseInt(member, 10) !== userId);
+
+    socket.current.emit('sendMessage', {
+      senderId: userId,
+      receiverId,
+      text: newMessage,
+    })
+
     const response = await fetch('/api/messages', {
       method: 'POST',
       headers: { 'Content-type': 'application/json; charset=UTF-8' },
@@ -51,6 +59,7 @@ const useCurrentConversation = () => {
     currentConversation,
     sendMessage,
     onChangeConversation,
+    setMessages,
   }
 }
 

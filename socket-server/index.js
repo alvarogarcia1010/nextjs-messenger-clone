@@ -16,7 +16,7 @@ const removeUser = (socketId) => {
 };
 
 const getUser = (userId) => {
-  return users.find((user) => user.userId === userId);
+  return users.find((user) => parseInt(user.userId) === parseInt(userId));
 };
 
 io.on("connection", (socket) => {
@@ -32,7 +32,9 @@ io.on("connection", (socket) => {
 
   //send and get message
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
+    console.log(senderId, receiverId, text)
     const user = getUser(receiverId);
+    console.log(user)
     io.to(user.socketId).emit("getMessage", {
       senderId,
       text,
