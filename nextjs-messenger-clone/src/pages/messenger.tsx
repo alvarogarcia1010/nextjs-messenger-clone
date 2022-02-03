@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import type { NextPage } from 'next'
+import { io } from 'socket.io-client'
 import { useEffect, useRef } from 'react'
 import styles from 'styles/Messenger.module.css'
 import Message from 'components/Message/Message'
@@ -10,6 +11,7 @@ import useCurrentConversation from 'hooks/useCurrentConversation'
 import MessageInput from 'components/MessageInput/MessageInput'
 
 const Messenger : NextPage = () => {
+  const socket:any = useRef()
   const scrollRef:any = useRef()
   const conversations = useConversations()
   const {
@@ -23,6 +25,14 @@ const Messenger : NextPage = () => {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  useEffect(() => {
+    socket.current = io('ws://localhost:8900')
+  }, [])
+
+  useEffect(() => {
+    socket.current.emit('addUser', userId)
+  }, [userId])
 
   let chatContainer = (
     <>
